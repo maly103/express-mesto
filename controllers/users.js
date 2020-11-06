@@ -17,7 +17,7 @@ module.exports.getUser = (req, res) => {
     .then((data) => {
       const user = data.find((item) => item._id === id);
       if (!user) {
-        res.status(500).send({ message: 'Нет пользователя с таким id' });
+        res.status(404).send({ message: 'Нет пользователя с таким id' });
       }
       res.send(user);
     })
