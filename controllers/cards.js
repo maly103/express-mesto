@@ -1,25 +1,18 @@
 const Card = require('../models/card');
+const errorHandler = require('../error');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((data) => res.send(data))
-    .catch(() => {
-      res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const { owner } = req.user._id;
+  const owner = req.user._id;
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'переданы некорректные данные в метод создания карточки' });
-      } else {
-        res.status(500).send({ message: err.message });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.deleteCard = (req, res) => {
@@ -30,15 +23,7 @@ module.exports.deleteCard = (req, res) => {
       throw error;
     })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -53,15 +38,7 @@ module.exports.likeCard = (req, res) => {
       throw error;
     })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -76,13 +53,5 @@ module.exports.dislikeCard = (req, res) => {
       throw error;
     })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };

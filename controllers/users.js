@@ -1,11 +1,10 @@
 const User = require('../models/user');
+const errorHandler = require('../error');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((data) => res.send(data))
-    .catch(() => {
-      res.status(500).send({ message: 'Запрашиваемый ресурс не найден' });
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.getUser = (req, res) => {
@@ -18,30 +17,14 @@ module.exports.getUser = (req, res) => {
     .then((data) => {
       res.send(data);
     })
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.updateUser = (req, res) => {
@@ -58,15 +41,7 @@ module.exports.updateUser = (req, res) => {
       throw error;
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
 
 module.exports.updateUserAvatar = (req, res) => {
@@ -83,13 +58,5 @@ module.exports.updateUserAvatar = (req, res) => {
       throw error;
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        res.status(400).send({ message: 'неверный id' });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'что-то пошло не так' });
-      }
-    });
+    .catch((err) => { errorHandler(err, res); });
 };
