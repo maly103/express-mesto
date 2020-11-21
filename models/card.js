@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+/* eslint no-useless-escape: "error" */
+// eslint-disable-next-line no-useless-escape
 const regex = /^https?:\/{2}[w{3}\.]{0,1}[^\/][\w\W]{1,}#?$/gi;
 
 const cardSchema = new mongoose.Schema({
