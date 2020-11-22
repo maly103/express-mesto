@@ -6,6 +6,8 @@ module.exports = (err, res) => {
     res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
   } else if (err.name === 'CastError') {
     res.status(400).send({ message: 'Неверный Id' });
+  } else if (err.name === 'Error') {
+    res.status(404).send({ message: err.message });
   } else {
     res.status(500).send({ message: 'что-то пошло не так' });
   }
